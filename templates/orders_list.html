@@ -146,7 +146,7 @@
   <span class="navbar-brand">❄️ CoolBreeze AC</span>
   <div class="d-flex align-items-center">
     <span class="navbar-text">Hi, {{ request.user.first_name }}</span>
-    <form method="POST" action="#" style="display:inline;">
+    <form method="POST" action="{% url 'logout' %}" style="display:inline;">
       {% csrf_token %}
       <button type="submit" class="logout-btn">Logout</button>
     </form>
@@ -182,7 +182,7 @@
         <span class="badge-{{ order.status }}">
           {{ order.get_status_display }}
         </span>
-        <a href="#" class="btn-view">View</a>
+        <a href="{% url 'order_detail' order.id %}" class="btn-view">View</a>
       </div>
 
     </div>
