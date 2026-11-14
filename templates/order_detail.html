@@ -369,15 +369,35 @@
         sendmessage()
       }
     })
-    function sendmessage(){
+    async function sendmessage(){
       const input = document.getElementById("chat-input")
       let message = input.value.trim()
       
       if (!message) return ;
 
       appendmessage(message,"customer")
+      try{
+        const response = await fetch("/support/chat/{{order.id}}/",{
+        
+        method:"POST",
+        headers:{
+          "Content-Type":"application/json",
+          "X-CSRFToken": "{{csrf_token}}"
+        },
+        body: JSON.stringify({message:message})})
+        let ai_message =await response.json()
+        appendmessage(`${ai_message.reply}`,"agent")
+      }catch(error){
+        appendmessage("something went wrong...","agent")
+        console.log("error",error)
 
+      }
+      
     }
+
+      
+
+  
   </script>
 
 </body>

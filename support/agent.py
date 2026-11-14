@@ -1,5 +1,6 @@
 from .gemini_client import Anthropic
 from django.conf import settings
+from .tools import get_order_details, get_refund_history, check_delivery_status
 
 # initialize Gemini
 client = Anthropic(api_key=settings.GEMINI_API_KEY)
@@ -82,5 +83,14 @@ SUPPORT_TOOLS = [
 ]
 
 # Execute_tool() --> bridge between claude and pyhton functions(tools)
+
+
+def execute_tools(tool_name,tool_input):
+    if tool_name == "get_order_details":
+        return get_order_details(tool_input["order_id"])
+    elif tool_name == "get_refund_history":
+        return get_refund_history(tool_input["user_id"])
+    elif tool_name == "check_delivery_status":
+        return check_delivery_status(tool_input["tracking_number"],tool_input["carier"])
 
 # Agent Loop --> while loop that loops until the task is done
