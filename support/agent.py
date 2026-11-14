@@ -32,6 +32,55 @@ Important rules:
 """
 # SUPPOT TOOLS --> Tools Schemas, that ai will read
 
+SUPPORT_TOOLS = [
+    {"name":"get_order_details",
+     "description":"Feth complete order details including status, carrier, tracking nmber and days since oreder was place. use this when customer mentions their order or complains about delivery.",
+     "input_schema": {
+         "type":"object",
+         "properties":{
+             "order_id":{
+                 "type":"integer",
+                 "description": "The order ID to look up"
+             }
+         },
+         "required":["order_id"]
+     }
+     },
+     {
+         "name":"get_refund_history",
+         "description":"Get complete refund history for a user. use this before making any refund related decisions.",
+         "input_schema":{
+             "type":"object",
+             "properties":{
+                 "user_id":{
+                     "type":"integer",
+                     "description":"The user ID to check refund history for"
+                 }
+             },
+             "required":['user_id']
+
+         }
+     },
+     {
+        "name": "check_delivery_status",
+        "description": "Check current delivery status using tracking number and carrier. Use this when customer complains about delayed or missing delivery.",
+        "input_schema": {
+            "type": "object",
+            "properties": {
+                "tracking_number": {
+                    "type": "string",
+                    "description": "The shipment tracking number"
+                },
+                "carrier": {
+                    "type": "string",
+                    "description": "The carrier name for example BlueDart or Delhivery"
+                }
+            },
+            "required": ["tracking_number", "carrier"]
+        }
+    },
+]
+
 # Execute_tool() --> bridge between claude and pyhton functions(tools)
 
 # Agent Loop --> while loop that loops until the task is done
