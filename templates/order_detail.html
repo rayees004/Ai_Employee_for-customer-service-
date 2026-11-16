@@ -210,9 +210,10 @@
     }
     .chatarea{
       flex:1;
+      scroll-behavior: smooth;
       overflow-y: auto;
       
-
+      
     }
     .agent-chat{
       margin-top: 5px;
@@ -355,14 +356,27 @@
       document.getElementById("chat-card").style = "opacity:1;"
 
     }
+    function load_chat(){
+      const messages = document.getElementById("chat-section")
+      messages.insertAdjacentHTML("beforeend",`
+      <div class="agent-chat " id="typing-loader">typing...</div>`);
+      
+    }
+    function hide_typing(){
+      const typeing = document.getElementById("typing-loader")
+      typeing.remove()
+
+    }
+      
+
     function appendmessage(text,type){
       const messages = document.getElementById("chat-section")
       const div = document.createElement("div")
       div.classList.add(type === "customer" ? "customer-chat" : "agent-chat")
       div.innerText = text
-
-      messages.appendChild(div)
       
+      messages.appendChild(div)
+      messages.scrollTop = messages.scrollHeight;
     }
     document.getElementById("chat-input").addEventListener("keydown",(e)=>{
       if(e.key == "Enter"){
@@ -376,6 +390,8 @@
       if (!message) return ;
 
       appendmessage(message,"customer")
+
+      setTimeout(()=>load_chat(),2000)
       try{
         const response = await fetch("/support/chat/{{order.id}}/",{
         
@@ -387,11 +403,15 @@
         body: JSON.stringify({message:message})})
         let ai_message =await response.json()
         appendmessage(`${ai_message.reply}`,"agent")
+        
       }catch(error){
         appendmessage("something went wrong...","agent")
         console.log("error",error)
 
       }
+      hide_typing()
+      
+      
       
     }
 
