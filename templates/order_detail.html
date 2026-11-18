@@ -402,14 +402,16 @@
         },
         body: JSON.stringify({message:message})})
         let ai_message =await response.json()
+        hide_typing()
         appendmessage(`${ai_message.reply}`,"agent")
-        
       }catch(error){
         appendmessage("something went wrong...","agent")
         console.log("error",error)
+        hide_typing()
 
       }
       hide_typing()
+      
       
       
       

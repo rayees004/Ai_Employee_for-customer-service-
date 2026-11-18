@@ -1,6 +1,7 @@
 from .gemini_client import Anthropic
 from django.conf import settings
 from .tools import get_order_details, get_refund_history, check_delivery_status
+from .models import Conversations, Message ,AgentLog
 
 # initialize Gemini
 client = Anthropic(api_key=settings.GEMINI_API_KEY)
@@ -94,3 +95,22 @@ def execute_tools(tool_name,tool_input):
         return check_delivery_status(tool_input["tracking_number"],tool_input["carier"])
 
 # Agent Loop --> while loop that loops until the task is done
+
+def run_support_agent(user_message,conversation_id):
+    conv = Conversations.objects.get(id=conversation_id)
+    conversation_messages = []
+    for msg in conv.messages.all() :
+        conversation_messages.append({
+            "role":msg.role,
+            "content":msg.content
+        })
+    
+    response = client.messages.create(
+    model=anthropic_model,
+    max_tokens=1024,
+    system=SUPPORT_SYSTEM_PROMPT,
+    messages= conversation_messages,
+    tools=[]
+)
+    final_reply = response.content[0].text
+    return final_reply

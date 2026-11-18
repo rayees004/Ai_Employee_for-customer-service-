@@ -13,7 +13,7 @@ class Conversations(models.Model):
 class Message(models.Model):
     ROLE_CHOICES = [
         ('user',"User"),
-        ('agent', "Agent")
+        ('agent', "assistant")
     ]
     conversations = models.ForeignKey(Conversations,on_delete=models.CASCADE,related_name="messages")
     role = models.CharField(max_length=20,choices=ROLE_CHOICES)
